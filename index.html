@@ -2,13 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Artha Dansala Photo Booth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artha Dansala Booth</title>
   <style>
     body {
       text-align: center;
       font-family: sans-serif;
-      background: #f4fff4;
+      background: linear-gradient(to bottom right, #f0fff0, #d4f5e0);
       padding: 20px;
+    }
+    input, textarea {
+      padding: 10px;
+      font-size: 16px;
+      width: 90%;
+      max-width: 400px;
+      margin: 10px auto;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
     video, canvas {
       border: 4px solid #27ae60;
@@ -21,6 +32,7 @@
       left: 0;
       pointer-events: none;
       width: 400px;
+      height: 300px;
     }
     .canvas-container {
       position: relative;
@@ -34,30 +46,34 @@
       color: white;
       border: none;
       border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <h1>📸 Artha Education Institute - Katulanda</h1>
-  <p>Camera Test & Photo Capture</p>
+  <p>ඔබගේ නම සහ අදහස යොදන්න</p>
+
+  <input type="text" id="name" placeholder="ඔබේ නම">
+  <textarea id="idea" placeholder="Artha දන්සල පිළිබඳ ඔබේ අදහස"></textarea>
+
   <video id="video" width="400" height="300" autoplay></video>
   <br>
-  <button onclick="capture()">📷 Capture</button>
+  <button onclick="capture()">📷 Capture Photo</button>
 
   <div class="canvas-container">
     <canvas id="canvas" width="400" height="300"></canvas>
-    <img src="https://github.com/Lakshmad-cs/Artha-Poson-Dansala/raw/main/Artha.jpg" class="frame-overlay" width="400" />
+    <img src="https://raw.githubusercontent.com/Lakshmad-cs/Artha-Poson-Dansala/main/Artha.jpg" class="frame-overlay" />
   </div>
 
   <br>
-  <button onclick="saveAndRedirect()">✅ Submit to Thank You Page</button>
+  <button onclick="saveAndRedirect()">✅ Submit</button>
 
   <script>
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
     const context = canvas.getContext('2d');
 
-    // Start webcam
     navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
       video.srcObject = stream;
     });
@@ -65,19 +81,24 @@
     function capture() {
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-      // Optional: overlay logo on canvas
-      const frameImg = new Image();
-      frameImg.crossOrigin = "anonymous";
-      frameImg.src = "https://github.com/Lakshmad-cs/Artha-Poson-Dansala/raw/main/Artha.jpg";
-      frameImg.onload = () => {
-        context.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
+      const frame = new Image();
+      frame.src = "https://raw.githubusercontent.com/Lakshmad-cs/Artha-Poson-Dansala/main/Artha.jpg";
+      frame.crossOrigin = "anonymous";
+      frame.onload = () => {
+        context.drawImage(frame, 0, 0, canvas.width, canvas.height);
       };
     }
 
     function saveAndRedirect() {
       const imageData = canvas.toDataURL('image/png');
+      const name = document.getElementById('name').value;
+      const idea = document.getElementById('idea').value;
+
       localStorage.setItem('capturedPhoto', imageData);
-      window.location.href = "thankyou.html";
+      localStorage.setItem('visitorName', name);
+      localStorage.setItem('visitorIdea', idea);
+
+      window.location.href = 'thankyou.html';
     }
   </script>
 </body>
