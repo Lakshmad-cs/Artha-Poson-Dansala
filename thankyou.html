@@ -37,41 +37,57 @@
       margin-top: 30px;
       position: relative;
       display: inline-block;
-    }
-    .captured-photo {
       width: 300px;
       height: auto;
-      border: 5px solid #27ae60;
-      border-radius: 10px;
     }
-    .frame-overlay {
+    .captured-photo, .frame-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 300px;
       height: auto;
+      border-radius: 10px;
+    }
+    .frame-overlay {
       pointer-events: none;
+    }
+    #nameDisplay, #ideaDisplay {
+      font-weight: bold;
+      margin-top: 10px;
+      font-size: 1.1em;
     }
   </style>
 </head>
 <body>
   <h1>🙏 ස්තුතියි!</h1>
   <p>ඔබගේ දායකත්වය සඳහා අපගේ හෘදයාංගම ස්තුතිය!</p>
+  <p id="nameDisplay"></p>
+  <p id="ideaDisplay"></p>
   <p>Artha Education Institute - Katulanda</p>
-  <img src="https://github.com/Lakshmad-cs/Artha-Poson-Dansala/raw/main/Artha.jpg" alt="Artha Logo" class="logo">
+  <img src="https://raw.githubusercontent.com/Lakshmad-cs/Artha-Poson-Dansala/main/Artha.jpg" alt="Artha Logo" class="logo">
 
   <div class="photo-container">
     <img id="capturedPhoto" src="" alt="Captured Photo" class="captured-photo">
-    <img src="https://github.com/Lakshmad-cs/Artha-Poson-Dansala/raw/main/Artha.jpg" class="frame-overlay" alt="Frame Overlay">
+    <img src="https://raw.githubusercontent.com/Lakshmad-cs/Artha-Poson-Dansala/main/Artha.jpg" class="frame-overlay" alt="Frame Overlay">
   </div>
 
   <div class="footer">© 2025 Artha Education Institute</div>
 
   <script>
-    // Load captured photo from localStorage
+    // Load captured photo
     const photo = localStorage.getItem('capturedPhoto');
     if (photo) {
       document.getElementById('capturedPhoto').src = photo;
+    }
+
+    // Load name and idea
+    const name = localStorage.getItem('visitorName');
+    const idea = localStorage.getItem('visitorIdea');
+    if (name) {
+      document.getElementById('nameDisplay').textContent = 'නම: ' + name;
+    }
+    if (idea) {
+      document.getElementById('ideaDisplay').textContent = 'අදහස: ' + idea;
     }
   </script>
 </body>
