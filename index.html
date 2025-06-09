@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Artha දන්සල - ලියාපදිංචි පෝරමය</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #111; color: white; text-align:center; padding: 20px; }
+  input, textarea, button { font-size: 18px; margin: 10px 0; padding: 10px; width: 90%; max-width: 350px; border-radius: 10px; border: none; }
+  video, canvas, img { border-radius: 10px; margin-top: 15px; }
+  #photoFrame { position: relative; display: inline-block; }
+  #frameText { position: absolute; bottom: 10px; left: 0; right: 0; color: yellow; font-size: 18px; font-weight: bold; text-shadow: 0 0 5px black; pointer-events: none; }
+</style>
+</head>
+<body>
+
+<h2>Artha දන්සල - ඔබේ අදහස හා ඡායාරූපය</h2>
+
+<form id="arthaForm">
+  <input type="text" id="name" placeholder="ඔබේ නම" required /><br />
+  <textarea id="idea" rows="4" placeholder="Artha දන්සල පිළිබඳ ඔබේ අදහස"></textarea><br />
+
+  <button type="button" id="startCam">කැමරාව ආරම්භ කරන්න</button><br />
+  <div id="photoFrame">
+    <video id="video" width="320" height="240" autoplay></video>
+    <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+    <div id="frameText">Artha Education Institute</div>
+  </div><br />
+
+  <button type="button" id="captureBtn">ඡායාරූපය ගන්න</button><br />
+  <img id="photoPreview" alt="Photo Preview" style="display:none; margin-top:10px; max-width:320px;" />
+  <br />
+
+  <button type="submit">Submit</button>
+  <button type="button" id="saveBtn">Save</button>
+  <button type="button" id="fbShareBtn">Share on Facebook</button>
+</form>
+
+<div id="message"></div>
+
+<script>
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const photoPreview = document.getElementById('photoPreview');
+  const startCamBtn = document.getElementById('startCam');
+  const captureBtn = document.getElementById('captureBtn');
+  const form = document.getElementById('arthaForm');
+  let capturedImage = "";
+
+  startCamBtn.onclick = () => {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => video.srcObject = stream)
+      .catch(err => alert('කැමරාව සක්‍රිය කළ නොහැක.'));
+  };
+
+  captureBtn.onclick = () => {
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    capturedImage = canvas.toDataURL('image/png');
+    photoPreview.src = capturedImage;
+    photoPreview.style.display = 'block';
+  };
+
+  form.onsubmit = e => {
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const idea = document.getElementById('idea').value.trim();
+
+    if (!name || !capturedImage) {
+      alert("කරුණාකර නම සහ ඡායාරූපය ලබාදෙන්න.");
+      return;
+    }
+
+    document.getElementById('message').innerHTML =
+      `<p>ස්තුතියි ${name}! ඔබේ අදහස ලැබී ඇත.</p>`;
+  };
+
+  document.getElementById('saveBtn').onclick = () => {
+    if (!capturedImage) {
+      alert("ඡායාරූපයක් ගන්න.");
+      return;
+    }
+    const link = document.createElement('a');
+    link.download = "artha_photo.png";
+    link.href = capturedImage;
+    link.click();
+  };
+
+  document.getElementById('fbShareBtn').onclick = () => {
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+  };
+</script>
+
+</body>
+</html>
