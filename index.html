@@ -2,94 +2,83 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Artha Dansala 2025</title>
+  <title>Artha Dansala Photo Booth</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
       text-align: center;
-      background: #f9f9f9;
+      font-family: sans-serif;
+      background: #f4fff4;
       padding: 20px;
     }
-    h1 {
-      color: #333;
+    video, canvas {
+      border: 4px solid #27ae60;
+      border-radius: 10px;
+      margin-top: 10px;
     }
-    input, textarea, button {
-      padding: 10px;
-      margin: 10px;
-      width: 80%;
-      max-width: 400px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+    .frame-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      width: 400px;
     }
-    #video, #canvas {
-      border-radius: 12px;
-      margin-top: 15px;
-      max-width: 90vw;
+    .canvas-container {
+      position: relative;
+      display: inline-block;
     }
-    .hidden {
-      display: none;
-    }
-    #thankyou {
-      display: none;
-      font-size: 20px;
-      color: green;
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
-  <h1>Artha Dansala 2025</h1>
-  <input type="text" id="name" placeholder="ඔබගේ නම (Your Name)"><br>
-  <textarea id="idea" placeholder="Artha දන්සල පිළිබඳ අදහසක්"></textarea><br>
-  <button id="startCam">📷 කැමරාව සක්‍රිය කරන්න</button><br>
-  <video id="video" width="320" height="240" autoplay muted></video><br>
-  <button id="capture">📸 ඡායාරූපයක් ගන්න</button><br>
-  <canvas id="canvas" width="320" height="240"></canvas><br>
-  <button id="submit">✅ Submit</button>
-  <div id="thankyou">🙏 ඔබේ තොරතුරු ලබාදුන් අතර අපගේ GitHub පිටුවට යොමුවෙමින්...</div>
+  <h1>📸 Artha Education Institute - Katulanda</h1>
+  <p>Camera Test & Photo Capture</p>
+  <video id="video" width="400" height="300" autoplay></video>
+  <br>
+  <button onclick="capture()">📷 Capture</button>
+
+  <div class="canvas-container">
+    <canvas id="canvas" width="400" height="300"></canvas>
+    <img src="https://github.com/Lakshmad-cs/Artha-Poson-Dansala/raw/main/Artha.jpg" class="frame-overlay" width="400" />
+  </div>
+
+  <br>
+  <button onclick="saveAndRedirect()">✅ Submit to Thank You Page</button>
 
   <script>
-    const startCam = document.getElementById('startCam');
-    const captureBtn = document.getElementById('capture');
-    const submitBtn = document.getElementById('submit');
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+    const context = canvas.getContext('2d');
 
-    startCam.onclick = async () => {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    // Start webcam
+    navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
       video.srcObject = stream;
-    };
+    });
 
-    captureBtn.onclick = () => {
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'yellow';
-      ctx.font = '16px Arial';
-      ctx.textAlign = 'center';
-      ctx.fillText('Artha Education Institute - Katulanda', canvas.width / 2, canvas.height - 10);
-    };
+    function capture() {
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    submitBtn.onclick = () => {
-      const name = document.getElementById('name').value;
-      const idea = document.getElementById('idea').value;
-      if (!name || !idea) return alert('කරුණාකර සියල්ල පුරවන්න');
+      // Optional: overlay logo on canvas
+      const frameImg = new Image();
+      frameImg.crossOrigin = "anonymous";
+      frameImg.src = "https://github.com/Lakshmad-cs/Artha-Poson-Dansala/raw/main/Artha.jpg";
+      frameImg.onload = () => {
+        context.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
+      };
+    }
 
-      // Submit to Google Form
-      const formData = new FormData();
-      formData.append('entry.570403530', name);
-      formData.append('entry.1605967163', idea);
-
-      fetch('https://docs.google.com/forms/d/e/1FAIpQLSc2jPAyOB87IxEGVV-5Ih920bmiP_h7tzpijKvZB4vjvQCm-g/formResponse', {
-        method: 'POST',
-        mode: 'no-cors',
-        body: formData
-      }).then(() => {
-        document.getElementById('thankyou').style.display = 'block';
-        setTimeout(() => {
-          window.location.href = 'thankyou.html';
-        }, 2000);
-      });
-    };
+    function saveAndRedirect() {
+      const imageData = canvas.toDataURL('image/png');
+      localStorage.setItem('capturedPhoto', imageData);
+      window.location.href = "thankyou.html";
+    }
   </script>
 </body>
 </html>
