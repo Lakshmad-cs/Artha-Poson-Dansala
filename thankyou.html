@@ -29,10 +29,28 @@
       font-size: 1em;
       color: #888;
     }
-    img.logo {
+    .logo {
+      width: 150px;
+      margin-top: 20px;
+    }
+    .photo-container {
       margin-top: 30px;
-      width: 180px;
-      border-radius: 12px;
+      position: relative;
+      display: inline-block;
+    }
+    .captured-photo {
+      width: 300px;
+      height: auto;
+      border: 5px solid #27ae60;
+      border-radius: 10px;
+    }
+    .frame-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 300px;
+      height: auto;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -41,7 +59,20 @@
   <p>ඔබගේ දායකත්වය සඳහා අපගේ හෘදයාංගම ස්තුතිය!</p>
   <p>Artha Education Institute - Katulanda</p>
   <img src="https://github.com/Lakshmad-cs/Artha-Poson-Dansala/raw/main/Artha.jpg" alt="Artha Logo" class="logo">
-  
+
+  <div class="photo-container">
+    <img id="capturedPhoto" src="" alt="Captured Photo" class="captured-photo">
+    <img src="https://github.com/Lakshmad-cs/Artha-Poson-Dansala/raw/main/Artha.jpg" class="frame-overlay" alt="Frame Overlay">
+  </div>
+
   <div class="footer">© 2025 Artha Education Institute</div>
+
+  <script>
+    // Load captured photo from localStorage
+    const photo = localStorage.getItem('capturedPhoto');
+    if (photo) {
+      document.getElementById('capturedPhoto').src = photo;
+    }
+  </script>
 </body>
 </html>
